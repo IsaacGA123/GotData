@@ -6,10 +6,11 @@ This project was completed as part of the IBM Data Analyst Professional Certific
 The objective was to analyze a dataset using Python, perform data wrangling, exploratory data analysis (EDA), and generate conclusions that help inform decision-making.
 
 ## Dataset
-The dataset used for this project contains information related to [briefly describe the data – e.g., real estate transactions, housing prices, etc.].  
-(*Add dataset source or a link if publicly available*)
+The dataset used for this project contains information related to [identifying survey data for trends in programing languages and databases].  
+( https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/LargeData/m4_survey_data.sqlite)
 
 ## Tools & Technologies
+- SQL 
 - Python (Pandas, NumPy, Matplotlib, Seaborn)
 - Jupyter Notebooks
 - Data Cleaning & Wrangling
@@ -22,8 +23,6 @@ The dataset used for this project contains information related to [briefly descr
 - Visualized distributions, correlations, and patterns
 - Generated actionable insights and final recommendations
 
-## Visuals
-*Add graphs or screenshots if applicable*
 
 ## How to Run
 1. Clone this repository
