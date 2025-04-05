@@ -1,8 +1,8 @@
 # IBM Data Analyst Capstone Project
 
 ## Overview
-This project was completed as part of the IBM Data Analyst Professional Certificate. It demonstrates the full data analysis process—from understanding the business problem to delivering insights through visualizations and storytelling.
-
+Welcome! This repository contains my final capstone project for the IBM Data Analyst Professional Certificate on Coursera.
+The project focuses on using real-world data to generate insights that can support data-driven decision-making. It’s a culmination of everything I learned throughout the course — from data wrangling and analysis to visualization and storytelling.
 The objective was to analyze a dataset using Python, perform data wrangling, exploratory data analysis (EDA), and generate conclusions that help inform decision-making.
 
 ## Dataset
