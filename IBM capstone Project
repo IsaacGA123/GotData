@@ -1,1 +1,419 @@
-https://1drv.ms/p/c/adebb814f21c95b3/ERI17kbtIShLgUno5-2fAZ4BPM6-NYbJe91rw0uDDWjA5Q?e=J05gBv
+#!/usr/bin/env python
+# coding: utf-8
+
+# <p style="text-align:center">
+#     <a href="https://skills.network" target="_blank">
+#     <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/assets/logos/SN_web_lightmode.png" width="380" alt="Skills Network Logo">
+#     </a>
+# </p>
+# 
+
+# # **Data Visualization Lab**
+# 
+
+# Estimated time needed: **45 to 60** minutes
+# 
+
+# In this assignment you will be focusing on the visualization of data.
+# 
+# The data set will be presented to you in the form of a RDBMS.
+# 
+# You will have to use SQL queries to extract the data.
+# 
+
+# ## Objectives
+# 
+
+# In this lab you will perform the following:
+# 
+
+# -   Visualize the distribution of data.
+# 
+# -   Visualize the relationship between two features.
+# 
+# -   Visualize composition of data.
+# 
+# -   Visualize comparison of data.
+# 
+
+# <hr>
+# 
+
+# ## Demo: How to work with database
+# 
+
+# Download database file.
+# 
+
+# In[1]:
+
+
+get_ipython().system('wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/LargeData/m4_survey_data.sqlite')
+
+
+# Import pandas module.
+# 
+
+# In[2]:
+
+
+import sqlite3
+conn = sqlite3.connect("m4_survey_data.sqlite") # open a database connection
+
+
+# Connect to the database.
+# 
+
+# In[3]:
+
+
+import pandas as pd
+
+
+# ## Demo: How to run an sql query
+# 
+
+# In[4]:
+
+
+# print how many rows are there in the table named 'master'
+QUERY = """
+SELECT COUNT(*)
+FROM master
+"""
+
+# the read_sql_query runs the sql query and returns the data as a dataframe
+df = pd.read_sql_query(QUERY,conn)
+df.head()
+
+
+# ## Demo: How to list all tables
+# 
+
+# In[6]:
+
+
+# print all the tables names in the database
+QUERY = """
+SELECT name as Table_Name FROM
+sqlite_master WHERE
+type = 'table'
+"""
+# the read_sql_query runs the sql query and returns the data as a dataframe
+pd.read_sql_query(QUERY,conn)
+
+
+# ## Demo: How to run a group by query
+# 
+
+# In[ ]:
+
+
+QUERY = """
+SELECT Age,COUNT(*) as count
+FROM master
+group by age
+order by age
+"""
+pd.read_sql_query(QUERY,conn)
+
+
+# ## Demo: How to describe a table
+# 
+
+# In[8]:
+
+
+table_name = 'LanguageWorkedWith'  # the table you wish to describe
+
+QUERY = """
+SELECT sql FROM sqlite_master
+WHERE name= '{}'
+""".format(table_name)
+
+df = pd.read_sql_query(QUERY,conn)
+print(df.iat[0,0])
+
+
+# # Hands-on Lab
+# 
+
+# ## Visualizing distribution of data
+# 
+
+# ### Histograms
+# 
+
+# Plot a histogram of `ConvertedComp.`
+# 
+
+# In[15]:
+
+
+# your code goes here
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+QUERY = """
+SELECT ConvertedComp 
+FROM master
+"""
+
+df = pd.read_sql_query(QUERY, conn)
+
+df['ConvertedComp'].plot(kind='hist', figsize=(8,5), bins=30, color='blue', edgecolor='black') 
+
+plt.title('Histogram of ConvertedComp')
+plt.xlabel('Converted Compensation')
+plt.ylabel('Frequency')
+
+plt.show()
+
+
+# ### Box Plots
+# 
+
+# Plot a box plot of `Age.`
+# 
+
+# In[35]:
+
+
+# your code goes here
+
+
+QUERY = """
+SELECT Age 
+FROM master
+"""
+
+df = pd.read_sql_query(QUERY, conn)
+
+df['Age'].plot(kind='box', figsize=(8,6), color='blue', vert=False)
+
+plt.title('Box Plot of Age')
+plt.xlabel('Frequency')
+
+plt.show()
+
+
+# ## Visualizing relationships in data
+# 
+
+# ### Scatter Plots
+# 
+
+# Create a scatter plot of `Age` and `WorkWeekHrs.`
+# 
+
+# In[36]:
+
+
+# your code goes here
+
+
+QUERY= """
+SELECT Age, WorkWeekHrs
+FROM master
+"""
+
+df = pd.read_sql_query(QUERY, conn)
+
+df.plot(kind='scatter', x='Age', y='WorkWeekHrs', figsize=(8,6), color='green')
+
+plt.title('Scatter Plot of Age and WorkWeekHrs')
+plt.xlabel('Age')
+plt.ylabel('WorkweekHrs')
+
+
+plt.show()
+
+
+# ### Bubble Plots
+# 
+
+# Create a bubble plot of `WorkWeekHrs` and `CodeRevHrs`, use `Age` column as bubble size.
+# 
+
+# In[37]:
+
+
+# your code goes here
+
+
+QUERY = """
+SELECT WorkWeekHrs, CodeRevHrs,
+Age
+FROM master
+"""
+
+df = pd.read_sql_query(QUERY,conn)
+
+plt.figure(figsize=(7,6))
+plt.scatter(
+    df['WorkWeekHrs'],
+    df['CodeRevHrs'],
+    s=df['Age']* 10,
+    alpha=0.5,
+    color='blue',
+    edgecolor='w',
+    linewidth=0.5
+)
+
+plt.xlabel('Work Week Hours')
+plt.ylabel('Code Review Hours')
+plt.title('WorkWeekHrs VS CodeRevHrs with Age as Bubble size')
+
+plt.show()
+
+
+
+# ## Visualizing composition of data
+# 
+
+# ### Pie Charts
+# 
+
+# Create a pie chart of the top 5 databases that respondents wish to learn next year. Label the pie chart with database names. Display percentages of each database on the pie chart.
+# 
+
+# In[18]:
+
+
+# your code goes here
+
+
+QUERY = """
+
+SELECT DatabaseDesireNextYear, COUNT(DatabaseDesireNextYear) 
+AS Count 
+FROM DatabaseDesireNextYear 
+GROUP BY DatabaseDesireNextYear 
+ORDER BY COUNT(DatabaseDesireNextYear) DESC LIMIT 5
+
+"""
+df = pd.read_sql_query(QUERY,conn)
+
+
+df.set_index('DatabaseDesireNextYear', inplace=True)
+lab = df.index 
+explode_list = [0.1, 0, 0, 0.1, 0.1]
+sizes = df.iloc[:,0]
+plt.pie(sizes, labels = lab , startangle=90,shadow=True,autopct='%1.1f%%', explode=explode_list)
+plt.title('Top 5 Databases')
+plt.show()
+
+
+# ### Stacked Charts
+# 
+
+# Create a stacked chart of median `WorkWeekHrs` and `CodeRevHrs` for the age group 30 to 35.
+# 
+
+# In[52]:
+
+
+# your code goes here
+
+QUERY = """
+SELECT WorkWeekHrs, CodeRevHrs, Age
+FROM master 
+WHERE Age BETWEEN 30 AND 35
+"""
+
+df = pd.read_sql_query(QUERY, conn)
+
+df.set_index('Age', inplace=True)
+
+median_workweekhrs = age_filtered_df['WorkWeekHrs'].median()
+median_coderevhrs = age_filtered_df['CodeRevHrs'].median()
+
+order = ['WorkWeekHrs', 'CodeRevHrs']
+
+
+plt.figure(figsize=(8,6))
+df.groupby('Age')[order].median().plot.bar(stacked=True)
+plt.title('WorkWeekHrs and CodeRevHrs for Age Group 30-35'),
+plt.ylabel('Hours')
+               
+plt.show()
+
+
+
+# ## Visualizing comparison of data
+# 
+
+# ### Line Chart
+# 
+
+# Plot the median `ConvertedComp` for all ages from 45 to 60.
+# 
+
+# In[14]:
+
+
+# your code goes here
+
+QUERY = """
+SELECT ConvertedComp, Age
+FROM master 
+WHERE Age BETWEEN 45 AND 60
+"""
+
+df = pd.read_sql_query(QUERY, conn)
+
+df.set_index('Age', inplace=True)
+
+median_ConvertedComp = df['ConvertedComp'].median()
+
+order = ['ConvertedComp']
+
+df.groupby('Age')[order].median().plot(kind='line')
+plt.title('Median for ConvertedComp from ages 45 to 60')
+plt.ylabel('Salary')
+
+
+plt.show()
+
+
+
+# ### Bar Chart
+# 
+
+# Create a horizontal bar chart using column `MainBranch.`
+# 
+
+# In[35]:
+
+
+# your code goes here
+
+QUERY = """
+SELECT MainBranch
+FROM master
+"""
+
+main_branch_df = pd.read_sql_query(QUERY, conn) 
+
+main_branch_counts = main_branch_df['MainBranch'].value_counts()
+
+main_branch_counts.plot(kind='barh', figsize=(8,6), color='blue', edgecolor='black')
+plt.title('Horizontal Bar Chart for Main Branch')
+plt.xlabel('Frequency')
+
+
+plt.show()
+
+
+
+
+
+# Close the database connection.
+# 
+
+# In[11]:
+
+
+conn.close()
